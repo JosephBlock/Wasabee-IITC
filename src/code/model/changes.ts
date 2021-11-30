@@ -13,7 +13,7 @@ type Change<T, K extends keyof T> = {
 
 type MarkerChange = Change<
   WasabeeMarker,
-  "type" | "zone" | "order" | "completedID" | "assignedTo" | "state"
+  "type" | "zone" | "order" | "completedID" | "assignedTo" | "state" | "comment"
 >;
 type LinkChange = Change<
   WasabeeLink,
@@ -25,6 +25,7 @@ type LinkChange = Change<
   | "completedID"
   | "assignedTo"
   | "state"
+  | "comment"
 >;
 
 type PortalChange = Change<WasabeePortal, "hardness" | "comment">;
@@ -67,6 +68,7 @@ function linkChanges(origin: WasabeeLink, current: WasabeeLink) {
       "order",
       "completedID",
       "assignedTo",
+      "comment",
       "state",
     ]),
   };
@@ -84,6 +86,7 @@ function markerChanges(origin: WasabeeMarker, current: WasabeeMarker) {
       "order",
       "completedID",
       "assignedTo",
+      "comment",
       "state",
     ]),
   };

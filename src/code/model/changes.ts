@@ -204,7 +204,7 @@ function rebaseDiff<T>(master: Partial<T>, follower: Partial<T>) {
   const props: Partial<T> = {};
   let once = false;
   for (const k in follower) {
-    if (JSON.stringify(master[k]) !== JSON.stringify(follower[k])) {
+    if (!master || JSON.stringify(master[k]) !== JSON.stringify(follower[k])) {
       props[k] = follower[k];
       once = true;
     }
@@ -213,13 +213,14 @@ function rebaseDiff<T>(master: Partial<T>, follower: Partial<T>) {
   return null;
 }
 
-// asume changes sorted by id
 function rebaseChanges<T, K extends keyof T>(
   master: Change<T, K>[],
   follower: Change<T, K>[],
   conflictOnDoubleEditOnly = false, // portal and zone
   concurrentEditKeys: K[] = []
 ) {
+  master.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  follower.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   const result: Change<T, K>[] = [];
   const conflict: {
     id: string | number;
@@ -519,6 +520,11 @@ export function applyRebaseChanges(
     master.links = master.links.filter((l) => l.ID !== lc.id);
     if (lc.value) master.links.push(lc.value);
   }
+
+  // remove duplicates
+  master.links = master.links.filter(
+    (l) => master.getLinkByPortalIDs(l.fromPortalId, l.toPortalId) === l
+  );
 
   master.cleanAnchorList();
   master.cleanPortalList();

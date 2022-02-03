@@ -242,7 +242,7 @@ export async function loadBlockerFaked(operation: WasabeeOp, force = false) {
   if (f.length > 0) getPortalDetails(f);
 }
 
-export function sendLocation() {
+export function sendLocation(latLng?: L.LatLng) {
   if (!WasabeeMe.isLoggedIn()) return;
   const sl =
     localStorage[window.plugin.wasabee.static.constants.SEND_LOCATION_KEY];

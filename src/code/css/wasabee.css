@@ -560,7 +560,8 @@ a.wasabee-portal.res { color: rgb(0, 135, 255) !important; }
   border-right-width: 0;
 }
 .wasabee-dialog-merge .strike {
-  text-decoration: line-through;
+  text-decoration: line-through red;
+  padding-right: .5em;
 }
 .wasabee-dialog-merge .diff-label {
   padding-right: .5em;

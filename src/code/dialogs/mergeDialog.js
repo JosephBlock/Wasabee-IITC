@@ -9,6 +9,7 @@ import { computeRebaseChanges, applyRebaseChanges } from "../model/changes";
 import PortalUI from "../ui/portal";
 import LinkUI from "../ui/link";
 import MarkerUI from "../ui/marker";
+import { sanitizeState } from "../model/task";
 
 const MergeDialog = WDialog.extend({
   statics: {
@@ -292,7 +293,7 @@ const MergeDialog = WDialog.extend({
       } else if (conflict.kind === "zone") {
         const zone = this._origin.getZone(change.id);
         const zoneDisplay = L.DomUtil.create("span");
-        zoneDisplay.textContent = "Zone: " + zone.name;
+        zoneDisplay.textContent = wX("dialog.merge.zone", { name: zone.name });
         container.appendChild(zoneDisplay);
         // only edition/edition
         const list = L.DomUtil.create("ul", "", container);
@@ -309,8 +310,8 @@ const MergeDialog = WDialog.extend({
   formatProp(key, old, next, op, container) {
     const li = L.DomUtil.create("li", "", container);
     // content with default value
-    const keySpan = L.DomUtil.create("span", "", li);
-    keySpan.textContent = key + ": ";
+    const keySpan = L.DomUtil.create("span", "diff-label", li);
+    keySpan.textContent = key + ":";
     const oldSpan = L.DomUtil.create("span", "strike", li);
     oldSpan.textContent = old[key];
     const newSpan = L.DomUtil.create("span", "", li);
@@ -318,29 +319,31 @@ const MergeDialog = WDialog.extend({
 
     // TODO wX
     if (key === "hardness") {
-      keySpan.textContent = "Hard: ";
+      keySpan.textContent = wX("dialog.merge.prop.hardness");
     } else if (key === "comment") {
-      keySpan.textContent = "Comment: ";
+      keySpan.textContent = wX("dialog.merge.prop.comment");
     } else if (key === "assignedTo") {
-      keySpan.textContent = "Assign: ";
+      keySpan.textContent = wX("dialog.merge.prop.assignedTo");
     } else if (key === "state") {
-      keySpan.textContent = "State: ";
+      keySpan.textContent = wX("dialog.merge.prop.state");
+      oldSpan.textContent = wX(sanitizeState(old[key]));
+      newSpan.textContent = wX(sanitizeState(next[key]));
     } else if (key === "color") {
-      keySpan.textContent = "Color: ";
+      keySpan.textContent = wX("dialog.merge.prop.color");
     } else if (key === "order") {
-      keySpan.textContent = "Order: ";
+      keySpan.textContent = wX("dialog.merge.prop.order");
     } else if (key === "zone") {
-      keySpan.textContent = "Zone: ";
+      keySpan.textContent = wX("dialog.merge.prop.zone");
     } else if (key === "points") {
-      keySpan.textContent = "Shape has changed";
+      keySpan.textContent = wX("dialog.merge.prop.zone_points");
       oldSpan.textContent = "";
       newSpan.textContent = "";
     } else if (key === "fromPortalId") {
-      keySpan.textContent = "From: ";
+      keySpan.textContent = wX("dialog.merge.prop.fromPortal");
     } else if (key === "toPortalId") {
-      keySpan.textContent = "To: ";
+      keySpan.textContent = wX("dialog.merge.prop.toPortal");
     } else if (key === "deltaminutes") {
-      keySpan.textContent = "Delta: ";
+      keySpan.textContent = wX("dialog.merge.prop.deltaminutes");
     }
 
     if (key === "assignedTo" || key === "completedID") {

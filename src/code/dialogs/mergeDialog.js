@@ -130,14 +130,15 @@ const MergeDialog = WDialog.extend({
     const desc = L.DomUtil.create("div", "desc", content);
     desc.textContent = wX("MERGE_MESSAGE", { opName: this.options.opOwn.name });
 
-    L.DomUtil.create("h3", "", content).textContent = "Conflicts:";
+    L.DomUtil.create("h3", "", content).textContent = wX(
+      "dialog.merge.conflicts"
+    );
 
     const details = L.DomUtil.create("table", "conflicts", content);
     const head = L.DomUtil.create("tr", "", details);
     // master head
     const masterHead = L.DomUtil.create("th", "master", head);
-    masterHead.colSpan = 2;
-    masterHead.textContent = "Master copy";
+    masterHead.textContent = wX("dialog.merge.server");
     const masterRadioHead = L.DomUtil.create(
       "input",
       "",
@@ -154,8 +155,7 @@ const MergeDialog = WDialog.extend({
     followerRadioHead.type = "radio";
     followerRadioHead.name = this.options.opOwn.ID;
     const followerHead = L.DomUtil.create("th", "follower", head);
-    followerHead.colSpan = 2;
-    followerHead.textContent = "Local copy";
+    followerHead.textContent = wX("dialog.merge.local");
 
     L.DomEvent.on(masterRadioHead, "change", () => {
       if (masterRadioHead.checked) {
@@ -183,9 +183,6 @@ const MergeDialog = WDialog.extend({
         this._opRebase,
         L.DomUtil.create("td", "master", row)
       );
-      // master type
-      L.DomUtil.create("td", "master", row).textContent =
-        c.conflict.master.type === "edition" ? "~" : "-";
       // master radio
       const masterRadio = L.DomUtil.create(
         "input",
@@ -205,9 +202,6 @@ const MergeDialog = WDialog.extend({
       followerRadio.type = "radio";
       followerRadio.name = c.conflict.id;
       followerRadio.value = "master";
-      // follower type
-      L.DomUtil.create("td", "follower", row).textContent =
-        c.conflict.follower.type === "edition" ? "~" : "-";
       // follower props
       this.formatConflict(
         c,

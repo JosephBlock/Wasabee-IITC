@@ -1,6 +1,6 @@
 import statics from "./static";
 import { initCrossLinks } from "./crosslinks";
-import initServer from "./server";
+import initServer, { locationPromise } from "./server";
 import {
   setupLocalStorage,
   initSelectedOperation,
@@ -192,6 +192,21 @@ window.plugin.wasabee.init = async () => {
       paneName: "Wasabee",
       default: () => new OperationChecklist(),
     });
+  }
+
+  // location update on mobile
+  if (window.plugin.userLocation) {
+    window.addHook(
+      "pluginUserLocation",
+      (e: { event: string; data: { latlng: L.LatLng } }) => {
+        const { event, data } = e;
+        if (event !== "onLocationChange" || !data.latlng) return;
+        const sl = localStorage[Wasabee.static.constants.SEND_LOCATION_KEY];
+        if (sl !== "true") return;
+        if (!WasabeeMe.isLoggedIn()) return;
+        locationPromise(data.latlng.lat, data.latlng.lng);
+      }
+    );
   }
 
   // hooks called when layers are enabled/disabled
